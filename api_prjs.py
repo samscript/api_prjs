@@ -85,10 +85,10 @@ def show_info():
     language    = request.environ.get('HTTP_ACCEPT_LANGUAGE')
     software    = request.environ.get('HTTP_USER_AGENT')
     # using regex to get the part I need
-    software_string_regexed = return_regex_str("\(.*\)", software )[0]
-    language_string_regexed = return_regex_str("[a-z-A-Z,].*;", language )[0]
+    software_string_regexed = return_regex_str("\(.*?\)", software )[0]
+    language_string = (language ).split(",")[0]
 
-    return return_json1(ip, language_string_regexed[0:len(language_string_regexed)-1], software_string_regexed[1:len(software_string_regexed)-1])
+    return return_json1(ip, language_string, software_string_regexed[1:len(software_string_regexed)-1])
 
 # ###########################################################################################################
 
