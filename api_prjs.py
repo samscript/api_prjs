@@ -5,6 +5,7 @@ import dateparser
 import json
 import datetime
 import re
+import urllib
 
 # Free Code Camp TimeStamp Microservice
 # Using:
@@ -77,13 +78,21 @@ def return_json1(ip1, lg, os):
 
 def return_regex_str(regex, string1 ):
     return re.findall(regex ,string1)
+    
+def get_my_ip():
+    # due to problem in c9.io can't get my ip with REMOTE_ADDR
+    # this function is a solution for this prob
+    link = "http://curlmyip.com/"
+    f = urllib.urlopen(link)
+    return f.readline().strip()
 
 @route('/whoami')
 def show_info():
     # PHP header request
     ip          = request.environ.get('REMOTE_ADDR')
-    language    = request.environ.get('HTTP_ACCEPT_LANGUAGE')
-    software    = request.environ.get('HTTP_USER_AGENT')
+    # ip                      = get_my_ip()
+    language                = request.environ.get('HTTP_ACCEPT_LANGUAGE')
+    software                = request.environ.get('HTTP_USER_AGENT')
     # using regex to get the part I need
     software_string_regexed = return_regex_str("\(.*?\)", software )[0]
     language_string = (language ).split(",")[0]
