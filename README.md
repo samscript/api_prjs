@@ -10,7 +10,7 @@ I elected to use python 2.7 with 2 available 3rd party libraries:
         
         
 Examples: 
-https://timestamp-microservice-samscript.c9users.io/datetime/86400
+https://api-prjs-samscript.c9users.io/datetime/86400
 Response:  {"unix": "86400", "natural": "January 2, 1970"}
 
 
