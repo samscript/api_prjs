@@ -89,7 +89,11 @@ def get_my_ip():
 @route('/whoami')
 def show_info():
     # PHP header request
-    ip          = request.environ.get('REMOTE_ADDR')
+    if request.environ.get('HTTP_X_FORWARDED_FOR') != None:
+        # we are behind a proxy
+        ip = request.environ.get('HTTP_X_FORWARDED_FOR')
+    else:
+        ip = request.environ.get('REMOTE_ADDR')
     # ip                      = get_my_ip()
     language                = request.environ.get('HTTP_ACCEPT_LANGUAGE')
     software                = request.environ.get('HTTP_USER_AGENT')
