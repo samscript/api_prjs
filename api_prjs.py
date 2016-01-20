@@ -1,11 +1,13 @@
 # API PROJETCS
 
-from bottle import route, run, template, request
+from bottle import route, run, template, request, redirect, tob
 import dateparser
 import json
 import datetime
 import re
 import urllib
+import validators
+import webbrowser
 
 # Free Code Camp TimeStamp Microservice
 # Using:
@@ -103,6 +105,48 @@ def show_info():
 
     return return_json1(ip, language_string, software_string_regexed[1:len(software_string_regexed)-1])
 
+# ###########################################################################################################
+
+# FreeCodeCamp Url Shortener Microservice
+# Using:
+#       https://github.com/kvesteri/validators
+
+url_dict = dict()
+
+def return_json5(original_url, shortened_url):
+    return json.dumps({"short_url":shortened_url, "entered_url":original_url})
+
+
+def adjusted_entry(entry):
+    #if url have 'http://' in it
+    if entry.split('://')[0] == 'http' or entry.split('://')[0] == 'https':
+        return entry
+    #if url have not 'http://' in it
+    else:
+        return 'http://' + entry
+
+def valid_url(entry):
+        return validators.url(adjusted_entry(entry))
+
+def shorten_url(entry):
+    url1 = adjusted_entry(entry)
+    length = len(url_dict)
+    url_dict[str(length)] = url1
+    return return_json5(entry, "api-prjs-samscript.c9users.io/url_short/" + str(length))
+
+@route('/shorten_url/<entry:path>')
+def shortened_url(entry):
+    if valid_url(entry):
+        return shorten_url(entry)
+    else:
+        return return_json5(entry, "error - entered invalid url")
+
+@route('/url_short/<entry>')
+def call_short_url(entry):
+    # webbrowser.open_new(url_dict[entry])
+    # webbrowser.open(url_dict[entry], new=0, autoraise=True)
+    redirect(tob(url_dict[entry]))
+    
 # ###########################################################################################################
 
 run(host='0.0.0.0', port=8080, debug=True)
